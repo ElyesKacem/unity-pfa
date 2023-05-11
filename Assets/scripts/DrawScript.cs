@@ -16,12 +16,18 @@ public class DrawScript : MonoBehaviour
    
  void Draw()
     {
+        //RaycastHit hit;
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             CreateBrush();
         }
         if (Input.GetKey(KeyCode.Mouse0))
         {
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //if (Physics.Raycast(ray, out hit, 2f))
+            //{
+                
+            //}
 
             Vector2 mousePos = m_camera.ScreenToWorldPoint(Input.mousePosition);
             if (mousePos != lastPos)
@@ -77,11 +83,13 @@ public class DrawScript : MonoBehaviour
             HttpResponseMessage response = await client.SendAsync(request);
             if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Image upload successful!");
+                Debug.Log("Image upload successful!");
+                
             }
             else
             {
-                Console.WriteLine("Image upload failed: " + response.ReasonPhrase);
+                Debug.Log("Image upload failed: " + response.ReasonPhrase);
+               
             }
         }
 
