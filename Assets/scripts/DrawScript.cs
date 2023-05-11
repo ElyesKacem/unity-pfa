@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 public class DrawScript : MonoBehaviour
 {
@@ -19,6 +22,7 @@ public class DrawScript : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Mouse0))
         {
+
             Vector2 mousePos = m_camera.ScreenToWorldPoint(Input.mousePosition);
             if (mousePos != lastPos)
             {
@@ -36,6 +40,7 @@ public class DrawScript : MonoBehaviour
     }
     void CreateBrush()
     {
+
         GameObject brushInstance = Instantiate(brush);
         currentLineRenderer = brushInstance.GetComponent<LineRenderer>();
         Vector2 mousePos = m_camera.ScreenToWorldPoint(Input.mousePosition);
@@ -49,9 +54,37 @@ public class DrawScript : MonoBehaviour
         currentLineRenderer.SetPosition(positionIndex, pointPos);
 
     }
-    public void OnClickScreenCaptureButton()
+    public async Task OnClickScreenCaptureButtonAsync()
     {
         StartCoroutine(CaptureScreen());
+        string imagePath = "screenshot.png";
+        byte[] imageBytes = File.ReadAllBytes(imagePath);
+
+        using (HttpClient client = new HttpClient())
+        {
+
+            //insert api here
+            string apiUrl = "https://api.example.com/upload-image";
+
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
+
+            ByteArrayContent content = new ByteArrayContent(imageBytes);
+            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+            request.Content = content;
+
+            HttpResponseMessage response = await client.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Image upload successful!");
+            }
+            else
+            {
+                Console.WriteLine("Image upload failed: " + response.ReasonPhrase);
+            }
+        }
+
     }
     public IEnumerator CaptureScreen()
     {

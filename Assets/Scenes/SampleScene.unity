@@ -407,7 +407,7 @@ GameObject:
   - component: {fileID: 1271572336}
   m_Layer: 5
   m_Name: Button
-  m_TagString: Untagged
+  m_TagString: notDrawable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -706,6 +706,14 @@ PrefabInstance:
     - target: {fileID: 5807191879201837196, guid: 3e63afe3647c30447980950dc7ace116, type: 3}
       propertyPath: m_Name
       value: BrushSample
+      objectReference: {fileID: 0}
+    - target: {fileID: 5807191879201837197, guid: 3e63afe3647c30447980950dc7ace116, type: 3}
+      propertyPath: m_UseWorldSpace
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5807191879201837197, guid: 3e63afe3647c30447980950dc7ace116, type: 3}
+      propertyPath: m_Parameters.numCapVertices
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5807191879201837198, guid: 3e63afe3647c30447980950dc7ace116, type: 3}
       propertyPath: m_RootOrder
