@@ -5,6 +5,7 @@ using System.IO;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Net.Http.Headers;
 
 public class DrawScript : MonoBehaviour
 {
@@ -61,12 +62,33 @@ public class DrawScript : MonoBehaviour
 
     }
     
-    public void OnClickScreenCaptureButtonAsync()
+    public async void OnClickScreenCaptureButtonAsync()
     {
         StartCoroutine(CaptureScreen());
 
-       
+        string imagePath = "Assets/screenshot.png";
 
+        using (var httpClient = new HttpClient())
+        using (var form = new MultipartFormDataContent())
+        {
+            // Read the file into a byte array
+            byte[] fileBytes = File.ReadAllBytes(imagePath);
+
+            // Add the file as binary data to the form data
+            form.Add(new ByteArrayContent(fileBytes), "image", Path.GetFileName(imagePath));
+
+            // Send the form data to the API endpoint
+            var response = await httpClient.PostAsync("http://127.0.0.1:8000/process_image", form);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Failed to upload file");
+            }
+            else
+            {
+               ////lehne el reponse terja3////////////////////////////////////
+                Debug.Log(await response.Content.ReadAsStringAsync());
+            }
+        }
     }
     
     
@@ -80,7 +102,8 @@ public class DrawScript : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         // Take screenshot
-        ScreenCapture.CaptureScreenshot("screenshot.png");
+        ScreenCapture.CaptureScreenshot("Assets/screenshot.png");
+
 
         // Show UI after we're done
         GameObject.Find("Canvas").GetComponent<Canvas>().enabled = true;
