@@ -14,7 +14,7 @@ public class DrawScript : MonoBehaviour
     //public static List<LineRenderer> finalDraw;
     Vector2 lastPos;
    
- void Draw()
+ public void Draw()
     {
         //RaycastHit hit;
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -60,40 +60,16 @@ public class DrawScript : MonoBehaviour
         currentLineRenderer.SetPosition(positionIndex, pointPos);
 
     }
-    public async Task OnClickScreenCaptureButtonAsync()
+    
+    public void OnClickScreenCaptureButtonAsync()
     {
         StartCoroutine(CaptureScreen());
-        string imagePath = "screenshot.png";
-        byte[] imageBytes = File.ReadAllBytes(imagePath);
 
-        using (HttpClient client = new HttpClient())
-        {
-
-            //insert api here
-            string apiUrl = "https://api.example.com/upload-image";
-
-
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
-
-            ByteArrayContent content = new ByteArrayContent(imageBytes);
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
-
-            request.Content = content;
-
-            HttpResponseMessage response = await client.SendAsync(request);
-            if (response.IsSuccessStatusCode)
-            {
-                Debug.Log("Image upload successful!");
-                
-            }
-            else
-            {
-                Debug.Log("Image upload failed: " + response.ReasonPhrase);
-               
-            }
-        }
+       
 
     }
+    
+    
     public IEnumerator CaptureScreen()
     {
         // Wait till the last possible moment before screen rendering to hide the UI
@@ -109,35 +85,7 @@ public class DrawScript : MonoBehaviour
         // Show UI after we're done
         GameObject.Find("Canvas").GetComponent<Canvas>().enabled = true;
     }
-    //public void ExportToImage()
-    //{
-    //    // Create a texture with the same size as the Line Renderer
-    //    Texture2D texture = new Texture2D(currentLineRenderer.positionCount, 1);
-
-    //    // Loop through the positions of the Line Renderer and set the pixels in the texture
-    //    for (int i = 0; i < currentLineRenderer.positionCount; i++)
-    //    {
-    //        Vector3 position = currentLineRenderer.GetPosition(i);
-    //        Color color = currentLineRenderer.startColor;
-    //        texture.SetPixel(i, 0, color);
-    //    }
-
-    //    // Apply changes to the texture
-    //    texture.Apply();
-
-    //    // Convert the texture to a PNG byte array
-    //    byte[] bytes = texture.EncodeToPNG();
-
-    //    // Save the byte array as an image file
-    //    File.WriteAllBytes("line.png", bytes);
-
-    //    // Destroy the texture to free up memory
-    //    Destroy(texture);
-
-    //    Debug.Log("Line exported to image.");
-    //}
-
-    // Update is called once per frame
+    
     void Update()
     {
         Draw();
