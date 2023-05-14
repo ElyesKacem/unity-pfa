@@ -1,34 +1,78 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Net.Http.Headers;
+using TMPro;
+using Newtonsoft.Json.Linq;
 
 public class DrawScript : MonoBehaviour
 {
     public Camera m_camera;
     public GameObject brush;
     public static LineRenderer currentLineRenderer;
+    
+    public GameObject charToDraw;
+    public GameObject success;
+    public GameObject fail;
+    public String charToDrawString;
+    char randomChar;
     //public static List<LineRenderer> finalDraw;
     Vector2 lastPos;
-   
- public void Draw()
+
+    private void Start()
     {
-        //RaycastHit hit;
+        
+        System.Random random = new System.Random();
+        
+        // Generate a random number between 0 and 35 (inclusive)
+        int randomNumber = random.Next(36);
+
+        // If the random number is between 0 and 25, it represents a character from A to Z
+        if (randomNumber < 26)
+        {
+            randomChar = (char)('A' + randomNumber);
+            Console.WriteLine("Random character: " + randomChar);
+        }
+        // If the random number is between 26 and 35, it represents a number from 0 to 9
+        else
+        {
+            int randomNum = randomNumber - 26;
+            randomChar = (char)('0' + randomNum);
+            //randomChar= (string)(randomNumber - 26);
+
+        }
+        TextMeshProUGUI charTextMeshPro = charToDraw.GetComponent<TextMeshProUGUI>();
+        charToDrawString= randomChar.ToString();
+        charTextMeshPro.text = charToDrawString;
+
+
+        Debug.Log(randomChar);
+        Debug.Log(randomNumber);
+    }
+
+    public void Draw()
+    {
+        RaycastHit hit;
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 2f))
+            {
+                if (hit.collider.gameObject.name != "VerifyButton")
+                {
+                    CreateBrush();
+                }
+            }
+            else
+            {
+
             CreateBrush();
+            }
         }
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //if (Physics.Raycast(ray, out hit, 2f))
-            //{
-                
-            //}
+          
 
             Vector2 mousePos = m_camera.ScreenToWorldPoint(Input.mousePosition);
             if (mousePos != lastPos)
@@ -87,6 +131,20 @@ public class DrawScript : MonoBehaviour
             {
                ////lehne el reponse terja3////////////////////////////////////
                 Debug.Log(await response.Content.ReadAsStringAsync());
+
+                JObject responseObject = JObject.Parse(response.Content.ToString());
+                string ocrResult = (string)responseObject["ocr_result"];
+
+
+                if (ocrResult== charToDrawString)
+                {
+                    success.SetActive(true);
+                }
+                else
+                {
+                    fail.SetActive(true);
+                }
+
             }
         }
     }

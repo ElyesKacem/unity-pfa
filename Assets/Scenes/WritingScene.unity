@@ -154,6 +154,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_camera: {fileID: 519420031}
   brush: {fileID: 1167503828}
+  charToDraw: {fileID: 1225290119}
+  success: {fileID: 0}
+  fail: {fileID: 0}
+  charToDrawString: 
 --- !u!4 &223659464
 Transform:
   m_ObjectHideFlags: 0
@@ -659,7 +663,7 @@ GameObject:
   - component: {fileID: 1271572337}
   - component: {fileID: 1271572336}
   m_Layer: 5
-  m_Name: Button
+  m_Name: VerifyButton
   m_TagString: notDrawable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -733,6 +737,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: DrawScript, Assembly-CSharp
         m_MethodName: OnClickScreenCaptureButtonAsync
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1271572336}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
