@@ -132,18 +132,18 @@ public class DrawScript : MonoBehaviour
                ////lehne el reponse terja3////////////////////////////////////
                 Debug.Log(await response.Content.ReadAsStringAsync());
 
-                JObject responseObject = JObject.Parse(response.Content.ToString());
+                JObject responseObject = JObject.Parse(await response.Content.ReadAsStringAsync());
                 string ocrResult = (string)responseObject["ocr_result"];
+                Debug.Log(ocrResult);
 
-
-                if (ocrResult== charToDrawString)
+                /*if (ocrResult== charToDrawString)
                 {
                     success.SetActive(true);
                 }
                 else
                 {
                     fail.SetActive(true);
-                }
+                }*/
 
             }
         }
