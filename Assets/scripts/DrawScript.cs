@@ -136,14 +136,14 @@ public class DrawScript : MonoBehaviour
                 string ocrResult = (string)responseObject["ocr_result"];
                 Debug.Log(ocrResult);
 
-                /*if (ocrResult== charToDrawString)
+                if (ocrResult== charToDrawString)
                 {
                     success.SetActive(true);
                 }
                 else
                 {
                     fail.SetActive(true);
-                }*/
+                }
 
             }
         }
