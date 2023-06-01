@@ -13,10 +13,13 @@ public class DrawScript : MonoBehaviour
     public static LineRenderer currentLineRenderer;
     
     public GameObject charToDraw;
+    public GameObject panel;
     public GameObject success;
     public GameObject fail;
     public String charToDrawString;
+    public GameObject myDraw;
     char randomChar;
+    string imagePath = "Assets/screenshot.png";
     //public static List<LineRenderer> finalDraw;
     Vector2 lastPos;
 
@@ -92,7 +95,7 @@ public class DrawScript : MonoBehaviour
     void CreateBrush()
     {
 
-        GameObject brushInstance = Instantiate(brush);
+        GameObject brushInstance = Instantiate(brush,myDraw.transform);
         currentLineRenderer = brushInstance.GetComponent<LineRenderer>();
         Vector2 mousePos = m_camera.ScreenToWorldPoint(Input.mousePosition);
         currentLineRenderer.SetPosition(0, mousePos);
@@ -110,7 +113,7 @@ public class DrawScript : MonoBehaviour
     {
         StartCoroutine(CaptureScreen());
 
-        string imagePath = "Assets/screenshot.png";
+        
 
         using (var httpClient = new HttpClient())
         using (var form = new MultipartFormDataContent())
@@ -135,7 +138,8 @@ public class DrawScript : MonoBehaviour
                 JObject responseObject = JObject.Parse(await response.Content.ReadAsStringAsync());
                 string ocrResult = (string)responseObject["ocr_result"];
                 Debug.Log(ocrResult);
-
+                myDraw.SetActive(false);
+                panel.SetActive(true);
                 if (ocrResult== charToDrawString)
                 {
                     success.SetActive(true);
@@ -160,7 +164,7 @@ public class DrawScript : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         // Take screenshot
-        ScreenCapture.CaptureScreenshot("Assets/screenshot.png");
+        ScreenCapture.CaptureScreenshot(imagePath);
 
 
         // Show UI after we're done
