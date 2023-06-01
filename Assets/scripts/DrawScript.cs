@@ -5,6 +5,7 @@ using System;
 using System.Net.Http;
 using TMPro;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 public class DrawScript : MonoBehaviour
 {
@@ -105,13 +106,44 @@ public class DrawScript : MonoBehaviour
         currentLineRenderer.SetPosition(positionIndex, pointPos);
 
     }
-    
-    public async void OnClickScreenCaptureButtonAsync()
+
+    public void OnClickScreenCaptureButton()
     {
-        StartCoroutine(CaptureScreen());
+        Debug.Log("cccccccccccccccccccccccccccccccccccccccccccc1");
 
-        string imagePath = "Assets/screenshot.png";
+        StartCoroutine(CaptureScreenAndSend());
+        Debug.Log("cccccccccccccccccccccccccccccccccccccccccccc2");
+    }
 
+    private IEnumerator CaptureScreenAndSend()
+    {
+        Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1");
+        // Hide UI temporarily
+        GameObject.Find("Canvas").GetComponent<Canvas>().enabled = false;
+
+        // Wait for the end of the frame to ensure everything is rendered
+        yield return new WaitForEndOfFrame();
+
+        // Capture screenshot
+        Texture2D screenTexture = ScreenCapture.CaptureScreenshotAsTexture();
+        byte[] bytes = screenTexture.EncodeToJPG();
+        Destroy(screenTexture);
+
+        // Generate a unique filename for each screenshot
+        //string filename = "screenshot_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".png";
+        string imagePath = "Assets/screenshot.jpg";
+        File.WriteAllBytes(imagePath, bytes);
+
+        // Show UI again
+        GameObject.Find("Canvas").GetComponent<Canvas>().enabled = true;
+        Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2");
+        // Send the screenshot to the API
+        yield return SendScreenshotToAPI(imagePath);
+    }
+
+    private async Task<IEnumerator> SendScreenshotToAPI(string imagePath)
+    {
+        Debug.Log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb1");
         using (var httpClient = new HttpClient())
         using (var form = new MultipartFormDataContent())
         {
@@ -129,14 +161,15 @@ public class DrawScript : MonoBehaviour
             }
             else
             {
-               ////lehne el reponse terja3////////////////////////////////////
-                Debug.Log(await response.Content.ReadAsStringAsync());
+                // Process the API response
+                string responseContent = await response.Content.ReadAsStringAsync();
+                Debug.Log(responseContent);
 
-                JObject responseObject = JObject.Parse(await response.Content.ReadAsStringAsync());
+                JObject responseObject = JObject.Parse(responseContent);
                 string ocrResult = (string)responseObject["ocr_result"];
                 Debug.Log(ocrResult);
 
-                if (ocrResult== charToDrawString)
+                if (ocrResult == charToDrawString)
                 {
                     success.SetActive(true);
                 }
@@ -144,29 +177,16 @@ public class DrawScript : MonoBehaviour
                 {
                     fail.SetActive(true);
                 }
-
             }
         }
+
+        // Delete the temporary screenshot file
+        File.Delete(imagePath);
+        Debug.Log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb2");
+
+        return null;
     }
-    
-    
-    public IEnumerator CaptureScreen()
-    {
-        // Wait till the last possible moment before screen rendering to hide the UI
-        yield return null;
-        GameObject.Find("Canvas").GetComponent<Canvas>().enabled = false;
 
-        // Wait for screen rendering to complete
-        yield return new WaitForEndOfFrame();
-
-        // Take screenshot
-        ScreenCapture.CaptureScreenshot("Assets/screenshot.png");
-
-
-        // Show UI after we're done
-        GameObject.Find("Canvas").GetComponent<Canvas>().enabled = true;
-    }
-    
     void Update()
     {
         Draw();
