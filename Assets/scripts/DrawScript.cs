@@ -20,7 +20,7 @@ public class DrawScript : MonoBehaviour
     public String charToDrawString;
     public GameObject myDraw;
     char randomChar;
-    string imagePath = "Assets/screenshot.png";
+    //string imagePath = "Assets/screenshot.jpg";
     //public static List<LineRenderer> finalDraw;
     Vector2 lastPos;
 
@@ -185,7 +185,7 @@ public class DrawScript : MonoBehaviour
         }
 
         // Delete the temporary screenshot file
-        File.Delete(imagePath);
+        //File.Delete(imagePath);
         Debug.Log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb2");
 
         return null;
