@@ -36,7 +36,7 @@ public class DrawScript : MonoBehaviour
         if (randomNumber < 26)
         {
             randomChar = (char)('A' + randomNumber);
-            Console.WriteLine("Random character: " + randomChar);
+            //Console.WriteLine("Random character: " + randomChar);
         }
         // If the random number is between 26 and 35, it represents a number from 0 to 9
         else
@@ -51,8 +51,8 @@ public class DrawScript : MonoBehaviour
         charTextMeshPro.text = charToDrawString;
 
 
-        Debug.Log(randomChar);
-        Debug.Log(randomNumber);
+        Debug.Log(charToDrawString);
+        //Debug.Log(randomNumber);
     }
 
     public void Draw()
@@ -173,7 +173,7 @@ public class DrawScript : MonoBehaviour
                 Debug.Log(ocrResult);
                 myDraw.SetActive(false);
                 panel.SetActive(true);
-                if (ocrResult== charToDrawString)
+                if (ocrResult.Contains(charToDrawString,StringComparison.OrdinalIgnoreCase))
                 {
                     success.SetActive(true);
                 }
